@@ -25,13 +25,35 @@ app.get('/hola/:book_name',(req,res)=>{
 
 //VERBS
 
-app.get('/api-biblioteca/libro',(req,res)=>{
-res.send(200,{libro:[]})
+app.get('/api-biblioteca/getLibros',(req,res)=>{
+Book.find({},(err,books)=>{
+	if(err) return res.status(500).send({message: `Error handling your request:${err}`})
+	if(!books) return res.status(404).send({message: `We couldn't find the books you're looking for`})
+	res.send(200,{books})
 })
 
 
-app.get('/api-biblioteca/libro/:libroId',(req,res)=>{
+})
 
+
+app.get('/api-biblioteca/getLibroById/:bookId',(req,res)=>{
+	let bookId=req.params.bookId
+
+	Book.findById(bookId,(err,book)=>{
+		if(err) return res.status(500).send({message: `Error handling your request:${err}`})
+		if(!book) return res.status(404).send({message: `We couldn't find the book you're looking for: ${bookId}`})
+		res.status(200).send({book})
+	})
+})
+
+app.get('/api-biblioteca/getLibroByName/:bookName',(req,res)=>{
+	let bookName=req.params.bookName
+
+	Book.findById(bookName,(err,book)=>{
+		if(err) return res.status(500).send({message: `Error handling your request:${err}`})
+		if(!book) return res.status(404).send({message: `We couldn't find the book you're looking for : ${bookName}`})
+		res.status(200).send({name:book})
+	})
 })
 
 app.post('/api-biblioteca/libro',(req,res)=>{
@@ -39,6 +61,7 @@ console.log('POST  /api-biblioteca/libro')
 console.log(req.body)
 
 let book = new Book()
+book.isbn = req.body.isbn
 book.name = req.body.name
 book.author = req.body.author
 book.subject = req.body.subject

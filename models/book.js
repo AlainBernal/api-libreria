@@ -4,6 +4,7 @@ const mongoose = require ('mongoose')
 const Schema = mongoose.Schema
 
 const bookSchema= Schema({
+	isbn:Number,
 	name:String,
 	author:String,
 	subject:String ,
